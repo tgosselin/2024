@@ -35,6 +35,13 @@ class EncryptionTest {
                 .assertIsSatisfied();
     }
 
+    @Test
+    void decryptMessage() throws Exception {
+        String decrypted = encryption.decrypt(FileUtils.loadFile("EncryptedEmail.txt"));
+        assertThat(decrypted).isNotBlank();
+        System.out.println(decrypted);
+    }
+
     private static Encryption createEncryption() {
         try {
             return new Encryption(
