@@ -1,28 +1,28 @@
 package communication;
 
 public class SantaCommunicator {
-    private final int numberOfDaysToRest;
+    private final Configuration configuration;
 
-    public SantaCommunicator(int numberOfDaysToRest) {
-        this.numberOfDaysToRest = numberOfDaysToRest;
+    public SantaCommunicator(Configuration configuration) {
+        this.configuration = configuration;
     }
 
-    public String composeMessage(String reindeerName, String currentLocation, int numbersOfDaysForComingBack, int numberOfDaysBeforeChristmas) {
-        var daysBeforeReturn = daysBeforeReturn(numbersOfDaysForComingBack, numberOfDaysBeforeChristmas);
+    public String composeMessage(Reindeer reindeer) {
+        var daysBeforeReturn = daysBeforeReturn(reindeer.numbersOfDaysForComingBack());
 
-        return "Dear " + reindeerName + ", please return from " + currentLocation +
+        return "Dear " + reindeer.name() + ", please return from " + reindeer.location() +
                 " in " + daysBeforeReturn + " day(s) to be ready and rest before Christmas.";
     }
 
-    public boolean isOverdue(String reindeerName, String currentLocation, int numbersOfDaysForComingBack, int numberOfDaysBeforeChristmas, Logger logger) {
-        if (daysBeforeReturn(numbersOfDaysForComingBack, numberOfDaysBeforeChristmas) <= 0) {
-            logger.log("Overdue for " + reindeerName + " located " + currentLocation + ".");
+    public boolean isOverdue(Reindeer reindeer, Logger logger) {
+        if (daysBeforeReturn(reindeer.numbersOfDaysForComingBack()) <= 0) {
+            logger.log("Overdue for " + reindeer.name() + " located " + reindeer.location() + ".");
             return true;
         }
         return false;
     }
 
-    private int daysBeforeReturn(int numbersOfDaysForComingBack, int numberOfDaysBeforeChristmas) {
-        return numberOfDaysBeforeChristmas - numbersOfDaysForComingBack - numberOfDaysToRest;
+    private int daysBeforeReturn(int numbersOfDaysForComingBack) {
+        return configuration.numberOfDayBeforeChristmas() - numbersOfDaysForComingBack - configuration.numberOfDaysToRest();
     }
 }
