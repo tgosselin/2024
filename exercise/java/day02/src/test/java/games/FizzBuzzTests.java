@@ -3,7 +3,6 @@ package games;
 import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
 import io.vavr.test.Arbitrary;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -40,11 +39,6 @@ class FizzBuzzTests {
             11, "Bang"
     );
 
-    @BeforeEach
-    void setUp() {
-        FizzBuzz.setRules(NEW_RULES);
-    }
-
     public static Stream<Arguments> validInputs() {
         return Stream.of(
                 Arguments.of(1, "1"),
@@ -75,7 +69,7 @@ class FizzBuzzTests {
     @ParameterizedTest
     @MethodSource("validInputs")
     void parse_successfully_numbers_between_1_and_100_samples(int input, String expectedResult) {
-        assertThat(FizzBuzz.convert(input))
+        assertThat(FizzBuzz.convert(NEW_RULES, input))
                 .isEqualTo(Some(expectedResult));
     }
 
@@ -92,13 +86,13 @@ class FizzBuzzTests {
     void parse_fail_for_numbers_out_of_range() {
         def("None for numbers out of range")
                 .forAll(invalidInput())
-                .suchThat(x -> FizzBuzz.convert(x).isEmpty())
+                .suchThat(x -> FizzBuzz.convert(NEW_RULES, x).isEmpty())
                 .check()
                 .assertIsSatisfied();
     }
 
     private boolean isConvertValid(Integer x) {
-        return FizzBuzz.convert(x)
+        return FizzBuzz.convert(NEW_RULES, x)
                 .exists(s -> validStringsFor(x).contains(s));
     }
 

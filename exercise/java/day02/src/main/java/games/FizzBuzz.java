@@ -17,7 +17,8 @@ public class FizzBuzz {
     );
     private static Map<Integer, String> mapping = DEFAULT_RULES;
 
-    public static Option<String> convert(int input) {
+    public static Option<String> convert(LinkedHashMap<Integer, String> newRules, int input) {
+        mapping = newRules;
         return isOutOfRange(input)
                 ? none()
                 : some(convertSafely(input));
@@ -36,9 +37,5 @@ public class FizzBuzz {
 
     private static boolean isOutOfRange(Integer input) {
         return input < MIN || input > MAX;
-    }
-
-    public static void setRules(LinkedHashMap<Integer, String> rules) {
-        mapping = rules;
     }
 }
