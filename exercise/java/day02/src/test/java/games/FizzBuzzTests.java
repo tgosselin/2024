@@ -1,7 +1,9 @@
 package games;
 
+import io.vavr.collection.LinkedHashMap;
 import io.vavr.collection.Seq;
 import io.vavr.test.Arbitrary;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
@@ -18,7 +20,30 @@ import static io.vavr.test.Property.def;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FizzBuzzTests {
-    private static final Seq<String> fizzBuzzStrings = List("Fizz", "Buzz", "FizzBuzz");
+    private static final Seq<String> fizzBuzzStrings = List("Fizz", "Buzz", "FizzBuzz", "Whizz", "Bang", "FizzWhizz", "FizzBang", "BuzzWhizz", "BuzzBang", "WhizzBang");
+    public static final LinkedHashMap<Integer, String> ORIGINAL_RULES = LinkedHashMap.of(
+            15, "FizzBuzz",
+            3, "Fizz",
+            5, "Buzz"
+    );
+
+    public static final LinkedHashMap<Integer, String> NEW_RULES = LinkedHashMap.of(
+            15, "FizzBuzz",
+            21, "FizzWhizz",
+            33, "FizzBang",
+            35, "BuzzWhizz",
+            55, "BuzzBang",
+            77, "WhizzBang",
+            3, "Fizz",
+            5, "Buzz",
+            7, "Whizz",
+            11, "Bang"
+    );
+
+    @BeforeEach
+    void setUp() {
+        FizzBuzz.setRules(NEW_RULES);
+    }
 
     public static Stream<Arguments> validInputs() {
         return Stream.of(
@@ -26,14 +51,21 @@ class FizzBuzzTests {
                 Arguments.of(67, "67"),
                 Arguments.of(82, "82"),
                 Arguments.of(3, "Fizz"),
-                Arguments.of(66, "Fizz"),
-                Arguments.of(99, "Fizz"),
+                Arguments.of(66, "FizzBang"),
+                Arguments.of(99, "FizzBang"),
                 Arguments.of(5, "Buzz"),
                 Arguments.of(50, "Buzz"),
                 Arguments.of(85, "Buzz"),
                 Arguments.of(15, "FizzBuzz"),
                 Arguments.of(30, "FizzBuzz"),
-                Arguments.of(45, "FizzBuzz")
+                Arguments.of(45, "FizzBuzz"),
+                Arguments.of(7, "Whizz"),
+                Arguments.of(11, "Bang"),
+                Arguments.of(21, "FizzWhizz"),
+                Arguments.of(35, "BuzzWhizz"),
+                Arguments.of(70, "BuzzWhizz"),
+                Arguments.of(55, "BuzzBang"),
+                Arguments.of(77, "WhizzBang")
         );
     }
 

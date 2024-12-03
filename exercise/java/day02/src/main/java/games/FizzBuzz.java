@@ -10,11 +10,12 @@ import static io.vavr.control.Option.some;
 public class FizzBuzz {
     public static final int MIN = 1;
     public static final int MAX = 100;
-    private static final Map<Integer, String> mapping = LinkedHashMap.of(
+    private static final LinkedHashMap<Integer, String> DEFAULT_RULES = LinkedHashMap.of(
             15, "FizzBuzz",
             3, "Fizz",
             5, "Buzz"
     );
+    private static Map<Integer, String> mapping = DEFAULT_RULES;
 
     public static Option<String> convert(int input) {
         return isOutOfRange(input)
@@ -35,5 +36,9 @@ public class FizzBuzz {
 
     private static boolean isOutOfRange(Integer input) {
         return input < MIN || input > MAX;
+    }
+
+    public static void setRules(LinkedHashMap<Integer, String> rules) {
+        mapping = rules;
     }
 }
