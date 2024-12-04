@@ -14,12 +14,12 @@ import static games.FizzBuzz.MAX;
 import static games.FizzBuzz.MIN;
 import static io.vavr.API.List;
 import static io.vavr.API.Some;
+import static io.vavr.control.Option.none;
 import static io.vavr.test.Arbitrary.integer;
 import static io.vavr.test.Property.def;
 import static org.assertj.core.api.Assertions.assertThat;
 
 class FizzBuzzTests {
-    private static final Seq<String> fizzBuzzStrings = List("Fizz", "Buzz", "FizzBuzz", "Whizz", "Bang", "FizzWhizz", "FizzBang", "BuzzWhizz", "BuzzBang", "WhizzBang");
     public static final LinkedHashMap<Integer, String> ORIGINAL_RULES = LinkedHashMap.of(
             15, "FizzBuzz",
             3, "Fizz",
@@ -77,7 +77,7 @@ class FizzBuzzTests {
     void parse_return_valid_string_for_numbers_between_1_and_100() {
         def("Some(validString) for numbers in [1; 100]")
                 .forAll(validInput())
-                .suchThat(this::isConvertValid)
+                .suchThat(x -> isConvertValid(NEW_RULES, x))
                 .check()
                 .assertIsSatisfied();
     }
@@ -91,17 +91,23 @@ class FizzBuzzTests {
                 .assertIsSatisfied();
     }
 
-    private boolean isConvertValid(Integer x) {
-        return FizzBuzz.convert(NEW_RULES, x)
-                .exists(s -> validStringsFor(x).contains(s));
+    @ParameterizedTest
+    @MethodSource("validInputs")
+    void parse_fail_when_rules_are_empty(int input) {
+        assertThat(FizzBuzz.convert(LinkedHashMap.empty(), input)).isEqualTo(none());
+    }
+
+    private boolean isConvertValid(LinkedHashMap<Integer, String> newRules, Integer x) {
+        return FizzBuzz.convert(newRules, x)
+                .exists(s -> validStringsFor(newRules, x).contains(s));
     }
 
     private static Arbitrary<Integer> validInput() {
         return integer().filter(x -> x >= MIN && x <= MAX);
     }
 
-    private static Seq<String> validStringsFor(Integer x) {
-        return fizzBuzzStrings.append(x.toString());
+    private static Seq<String> validStringsFor(LinkedHashMap<Integer, String> newRules, Integer x) {
+        return newRules.values().append(x.toString());
     }
 
     private static Arbitrary<Integer> invalidInput() {

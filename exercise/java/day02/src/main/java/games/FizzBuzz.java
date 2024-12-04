@@ -19,9 +19,11 @@ public class FizzBuzz {
 
     public static Option<String> convert(LinkedHashMap<Integer, String> newRules, int input) {
         mapping = newRules;
-        return isOutOfRange(input)
-                ? none()
-                : some(convertSafely(input));
+        return isOutOfRange(input) || haveValidRules(newRules) ? none() : some(convertSafely(input));
+    }
+
+    private static boolean haveValidRules(LinkedHashMap<Integer, String> newRules) {
+        return newRules == null || newRules.isEmpty();
     }
 
     private static String convertSafely(Integer input) {
