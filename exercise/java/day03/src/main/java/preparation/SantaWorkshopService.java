@@ -10,10 +10,17 @@ public class SantaWorkshopService {
         if (weight > 5) {
             throw new IllegalArgumentException("Gift is too heavy for Santa's sleigh");
         }
+        if (weight <= 0) {
+            throw new IllegalArgumentException("Gift cannot have negative or zero weight");
+        }
 
         var gift = new Gift(giftName, weight, color, material);
         preparedGifts.add(gift);
 
         return gift;
+    }
+
+    public List<Gift> getPreparedGifts() {
+        return preparedGifts;
     }
 }
